@@ -26,13 +26,11 @@ def draw_graph(G, pos):
     plt.show()
 
 
-def mutate(lst):
-    # Select two random indices
-    index1, index2 = random.sample(range(len(lst)), 2)
-
-    # Swap the elements at the selected indices
-    lst[index1], lst[index2] = lst[index2], lst[index1]
-
+def mutate(lst, rate=0.08):
+    for i in range(len(lst)):
+        if random.random() <= rate:
+            rand_idx = random.randint(0, len(lst) - 1)
+            lst[i], lst[rand_idx] = lst[rand_idx], lst[i]
     return lst
 
 
@@ -53,7 +51,6 @@ def evaluate(G, lst, start, finish):
     v = start
     path_length = 0
     visited = [False] * (len(lst) + 2)
-    #print("Visited len " +  str(len(visited)))
     visited[start] = True
     while v != finish:
         visited[v] = True
@@ -85,23 +82,21 @@ def main():
     #draw_graph(G, pos)
 
     genoms = []
-    generation_size = 46
+    generation_size = 20
     for _ in range(generation_size):
         genom = list(range(0, 46))
         genom.remove(start)
         genom.remove(finish)
         random.shuffle(genom)
         genoms.append(genom)
-    #print(genoms)
 
     best_path_length = sys.maxsize
     best_genom = []
     no_improvement = 0
     max_no_improvement = 20
     while no_improvement < max_no_improvement:
-        #print(best_path_length)
         evaluated_genoms = [evaluate(G, genom, start, finish) for genom in genoms]
-        #print(evaluated_genoms)
+        print(evaluated_genoms)
         print(min(evaluated_genoms))
         # loop condition
         if min(evaluated_genoms) < best_path_length:
@@ -115,20 +110,13 @@ def main():
         p = min([x for x in path_legths_inverted if x != 0.0])
         roulette_weights = [np.sqrt(x) if x != 0.0 else np.sqrt(p/2) for x in path_legths_inverted]
         norm_roulette_weights = [x/sum(roulette_weights) for x in roulette_weights]
-        new_genoms = [best_genom]+
+        new_genoms = [best_genom]
         for _ in range(generation_size - 1):
             parents_idxs = np.random.choice(range(generation_size), size=2, replace=False, p=norm_roulette_weights)
-            new_genoms.append(cross(genoms[parents_idxs[0]], genoms[parents_idxs[1]]))
+            new_genoms.append(mutate(cross(genoms[parents_idxs[0]], genoms[parents_idxs[1]])))
+            #new_genoms.append(mutate(cross(genoms[parents_idxs[0]], genoms[parents_idxs[0]]))) #bez crossa
+            #new_genoms.append(cross(genoms[parents_idxs[0]], genoms[parents_idxs[1]])) #bez mutacji
         genoms = new_genoms
-
-
-        #evaluated_genoms.sort()
-        #parents = evaluated_genoms[0:2]
-        #print(parents[0][0])
-        #genoms = [parents[0][1]] + [parents[1][1]] + [cross(parents[0][1], parents[1][1])] * 8
-        #genoms[8] = mutate(genoms[8])
-        #enoms[9] = mutate(genoms[9])
-
 
 if __name__ == "__main__":
     main()
