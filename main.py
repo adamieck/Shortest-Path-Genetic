@@ -30,7 +30,7 @@ def main():
     generation_size = 20
     elite_size = 1
     num_nodes = len(G.nodes)
-    population = initialize_population(generation_size, start, finish, num_nodes)
+    population = initialize_population(generation_size, start, num_nodes)
 
     best_path_length = sys.maxsize
     best_genome = []

@@ -1,7 +1,7 @@
 import networkx as nx
 import numpy as np
 
-def initialize_population(size, start, finish, num_nodes):
+def initialize_population(size, start, num_nodes):
     population = []
     # Generate random genomes by making permutations of all nodes except start
     for _ in range(size):
