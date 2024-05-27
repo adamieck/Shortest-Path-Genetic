@@ -2,6 +2,7 @@ import numpy as np
 import networkx as nx
 from genetic_algorithm import initialize_population, evaluate, selection, crossover, mutate
 from utils import draw_graph
+import sys
 
 def main():
     np.random.seed(5)
@@ -28,7 +29,7 @@ def main():
     num_nodes = len(G.nodes)
     population = initialize_population(generation_size, start, finish, num_nodes)
 
-    best_path_length = np.inf
+    best_path_length = sys.maxsize
     best_genome = []
     no_improvement = 0
     max_no_improvement = 20
@@ -53,8 +54,8 @@ def main():
         
         while len(new_population) < generation_size:
             # Select two parents
-            selected_population = selection(population, fitness_values)
-            offspring = crossover(selected_population[0], selected_population[0])
+            selected_population = selection(population, fitness_values, generation_size)
+            offspring = crossover(selected_population[0], selected_population[1])
             offspring = mutate(offspring)
             new_population.append(offspring)
         
