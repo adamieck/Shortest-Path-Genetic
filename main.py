@@ -1,6 +1,6 @@
 import numpy as np
 import networkx as nx
-from genetic_algorithm import initialize_population, evaluate, selection, crossover, mutate
+from genetic_algorithm import initialize_population, evaluate, selection, crossover, mutate, calculate_roulette_weights
 from utils import draw_graph, create_complete_graph
 import sys
 import random
@@ -20,7 +20,7 @@ def main():
     # pos = nx.spring_layout(G, seed=1)
     # draw_graph(G, pos)
 
-    np.random.seed(random.randint(0, 1000))
+    np.random.seed()
 
     start = 31
     finish = 36
@@ -55,16 +55,18 @@ def main():
         elite_genomes = [population[idx] for idx in elite_indices]
         new_population = elite_genomes.copy()
         
+        norm_roulette_weights = calculate_roulette_weights(fitness_values)
+        
         # Version with crossover
         while len(new_population) < generation_size:
             # Select two parents
-            selected_population = selection(population, fitness_values, generation_size, 2)
+            selected_population = selection(population, generation_size, 2, norm_roulette_weights)
             offspring = crossover(selected_population[0], selected_population[1])
             offspring = mutate(offspring)
             new_population.append(offspring)
         
         # Version without crossover
-        # selected_population = selection(population, fitness_values, generation_size, generation_size - elite_size)
+        # selected_population = selection(population, generation_size, generation_size - elite_size, norm_roulette_weights)
         # for genome in selected_population:
         #     new_population.append(mutate(genome))
                 
