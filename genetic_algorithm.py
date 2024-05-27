@@ -19,7 +19,8 @@ def evaluate(G, genome, start, finish):
     visited[start] = True
     
     while current_node != finish:
-        neighbors = [neighbor for neighbor in G.neighbors(current_node) if not visited[neighbor]]
+        neighbors = [neighbor for neighbor in G.neighbors(current_node) 
+                        if not visited[neighbor]]
         if not neighbors:
             return np.inf
         
@@ -33,7 +34,7 @@ def evaluate(G, genome, start, finish):
     return path_length
 
 def calculate_roulette_weights(fitness_values):
-    path_lengths_inverted = np.where(fitness_values != 0, 1 / np.array(fitness_values), 0)
+    path_lengths_inverted = 1 / np.array(fitness_values)
     min_nonzero = np.min(path_lengths_inverted[path_lengths_inverted != 0])
     roulette_weights = np.where(path_lengths_inverted != 0, np.sqrt(path_lengths_inverted), np.sqrt(min_nonzero / 2))
     norm_roulette_weights = roulette_weights / np.sum(roulette_weights)

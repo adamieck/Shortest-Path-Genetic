@@ -6,6 +6,7 @@ import sys
 import random
 
 def main():
+    print(1 / np.inf)
     np.random.seed(5)
     
     vertex_count = 46
