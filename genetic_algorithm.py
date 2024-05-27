@@ -66,10 +66,10 @@ def crossover(parent1, parent2):
     return child_genome
         
 
-# Mutating a list ogenome with a given rate
-def mutate(lst, rate=0.1):
-    for i in range(len(lst)):
+# Mutating a list genome with a given rate
+def mutate(genome, rate=0.1):
+    for i in range(len(genome)):
         if np.random.random() <= rate:
-            rand_idx = np.random.randint(0, len(lst) - 1)
-            lst[i], lst[rand_idx] = lst[rand_idx], lst[i]
-    return lst
+            rand_idx = np.random.randint(0, len(genome) - 1)
+            genome[i], genome[rand_idx] = genome[rand_idx], genome[i]
+    return genome
