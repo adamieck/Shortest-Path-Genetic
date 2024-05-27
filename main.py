@@ -1,21 +1,23 @@
 import numpy as np
 import networkx as nx
 from genetic_algorithm import initialize_population, evaluate, selection, crossover, mutate
-from utils import draw_graph
+from utils import draw_graph, create_complete_graph
 import sys
 import random
 
 def main():
     np.random.seed(5)
     
-    G = nx.tutte_graph()
+    vertex_count = 46
+    
+    # G = nx.tutte_graph()
+    # # Assign random weights to the edges
+    # for (u, v) in G.edges():
+    #     G.edges[u, v]['weight'] = np.random.randint(1, 50)
+    G = create_complete_graph(vertex_count)
 
 
-    # Assign random weights to the edges
-    for (u, v) in G.edges():
-        G.edges[u, v]['weight'] = np.random.randint(1, 50)
-
-    pos = nx.spring_layout(G, seed=1)
+    # pos = nx.spring_layout(G, seed=1)
     # draw_graph(G, pos)
 
     np.random.seed(random.randint(0, 1000))
