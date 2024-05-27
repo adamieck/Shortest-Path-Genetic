@@ -42,19 +42,19 @@ def evaluate(G, genome, start, finish):
     return path_length
 
 # Selection function - we will use the roulette wheel selection
-def selection(genomes, fitness_values, generation_size):
+def selection(genomes, fitness_values, generation_size, selection_size=2):
     path_lengths_inverted = np.where(fitness_values != 0, 1 / np.array(fitness_values), 0)
     min_nonzero = np.min(path_lengths_inverted[path_lengths_inverted != 0])
     roulette_weights = np.where(path_lengths_inverted != 0, np.sqrt(path_lengths_inverted), np.sqrt(min_nonzero / 2))
     norm_roulette_weights = roulette_weights / np.sum(roulette_weights)
     
     selected_genomes = []
-    selected_indices = np.random.choice(range(generation_size), size=2, replace=False, p=norm_roulette_weights)
-    selected_genomes.append(genomes[selected_indices[0]])
-    selected_genomes.append(genomes[selected_indices[1]])
+    selected_indices = np.random.choice(range(generation_size), size=selection_size, replace=False, p=norm_roulette_weights)
+    for idx in selected_indices:
+        selected_genomes.append(genomes[idx])
     
     return selected_genomes
-    
+
 
 # Crossover function:
 # 1. We will keep first k elements from the first parent.

@@ -52,13 +52,19 @@ def main():
         elite_genomes = [population[idx] for idx in elite_indices]
         new_population = elite_genomes.copy()
         
+        # Version with crossover
         while len(new_population) < generation_size:
             # Select two parents
-            selected_population = selection(population, fitness_values, generation_size)
+            selected_population = selection(population, fitness_values, generation_size, 2)
             offspring = crossover(selected_population[0], selected_population[1])
             offspring = mutate(offspring)
             new_population.append(offspring)
         
+        # Version without crossover
+        selected_population = selection(population, fitness_values, generation_size, generation_size - elite_size)
+        for genome in selected_population:
+            new_population.append(mutate(genome))
+                
         population = new_population
 
     print("Best path length found: " + str(best_path_length))
