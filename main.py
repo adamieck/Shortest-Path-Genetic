@@ -3,6 +3,7 @@ import networkx as nx
 from genetic_algorithm import initialize_population, evaluate, selection, crossover, mutate
 from utils import draw_graph
 import sys
+import random
 
 def main():
     np.random.seed(5)
@@ -17,7 +18,7 @@ def main():
     pos = nx.spring_layout(G, seed=1)
     # draw_graph(G, pos)
 
-
+    np.random.seed(random.randint(0, 1000))
 
     start = 31
     finish = 36
@@ -61,9 +62,9 @@ def main():
             new_population.append(offspring)
         
         # Version without crossover
-        selected_population = selection(population, fitness_values, generation_size, generation_size - elite_size)
-        for genome in selected_population:
-            new_population.append(mutate(genome))
+        # selected_population = selection(population, fitness_values, generation_size, generation_size - elite_size)
+        # for genome in selected_population:
+        #     new_population.append(mutate(genome))
                 
         population = new_population
 
