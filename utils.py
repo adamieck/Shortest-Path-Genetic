@@ -10,7 +10,7 @@ import numpy as np
 def draw_graph(G, pos, genome=None, start=None, finish=None, iteration=None, mutation_rate=None):
     plt.clf()
     plt.title(f"Generation {iteration}")
-    nx.draw(G, pos, with_labels=True, node_color='lightpink', node_size=700, font_weight='bold')
+    nx.draw(G, pos, with_labels=True, node_color='lightpink', node_size=70, font_weight='bold')
     labels = nx.get_edge_attributes(G, 'weight')
     nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
     
