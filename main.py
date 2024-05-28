@@ -14,24 +14,20 @@ def main():
     
     G = create_arek_graph()
 
-    df = pd.DataFrame(index=G.nodes(), columns=G.nodes())
-    for row, data in nx.shortest_path_length(G):
-        for col, dist in data.items():
-            df.loc[row, col] = dist
+    # df = pd.DataFrame(index=G.nodes(), columns=G.nodes())
+    # for row, data in nx.shortest_path_length(G):
+    #     for col, dist in data.items():
+    #         df.loc[row, col] = dist
 
-    df = df.fillna(df.max().max())
+    # df = df.fillna(df.max().max())
 
     # Use Kamada-Kawai layout with custom distances
-    layout = nx.kamada_kawai_layout(G, dist=df.to_dict())
-
-    draw_graph(G, layout)
-    imageio.imwrite('graph.png', imageio.imread('frame_0.png'))
-
+    # layout = nx.kamada_kawai_layout(G, dist=df.to_dict())
     generation_size = 20
     elite_size = 1
     num_nodes = len(G.nodes)
 
-    num_trials = 500
+    num_trials = 3
     crossover_results = []
     crossover_iterations = []
     non_crossover_results = []
