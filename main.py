@@ -1,9 +1,13 @@
 import numpy as np
 import networkx as nx
 from genetic_algorithm import initialize_population, evaluate, selection, crossover, mutate, calculate_roulette_weights
-from utils import draw_graph, create_complete_graph
+from utils import draw_graph, create_complete_graph, create_arek_graph
 import sys
+import imageio.v2 as imageio
 import random
+import pandas as pd
+import os
+
 
 def main():
     np.random.seed(5)
@@ -14,24 +18,40 @@ def main():
     # # Assign random weights to the edges
     # for (u, v) in G.edges():
     #     G.edges[u, v]['weight'] = np.random.randint(1, 50)
-    (G, start, finish) = create_complete_graph(vertex_count)
+    
+    G = create_arek_graph()
+    start = 23
+    finish = 69
 
+    df = pd.DataFrame(index=G.nodes(), columns=G.nodes())
+    for row, data in nx.shortest_path_length(G):
+        for col, dist in data.items():
+            df.loc[row, col] = dist
+
+    df = df.fillna(df.max().max())
+
+    # Use Kamada-Kawai layout with custom distances
+    layout = nx.kamada_kawai_layout(G, dist=df.to_dict())
+
+
+    # draw_graph(G, layout, genome=None, start=start, finish=finish, iteration=0, mutation_rate=0.1)
     # pos = nx.spring_layout(G, seed=1)
     # draw_graph(G, pos)
 
     path_length = nx.dijkstra_path_length(G, source=start, target=finish)
-    # print("Dijkstra result: " + str(path_length))
+    print("Dijkstra result: " + str(path_length))
 
-    generation_size = 20
-    elite_size = 2
+    generation_size = 10
+    elite_size = 1
     num_nodes = len(G.nodes)
     population = initialize_population(generation_size, start, num_nodes)
 
     best_path_length = sys.maxsize
-    # best_genome = []
+    best_genome = []
+    # images = []
     results = []
     iterations = []
-    num_trials = 500
+    num_trials = 1
 
     for i in range(num_trials):
         np.random.seed()
@@ -44,10 +64,12 @@ def main():
         while no_improvement < max_no_improvement:
             iteration_count += 1
             fitness_values = [evaluate(G, genome, start, finish) for genome in population]
+            print(fitness_values)
             min_fitness = min(fitness_values)
             
             if min_fitness < best_path_length:
                 best_path_length = min_fitness
+                best_genome = population[np.argmin(fitness_values)]
                 no_improvement = 0
             else:
                 no_improvement += 1
@@ -55,6 +77,9 @@ def main():
             elite_indices = np.argsort(fitness_values)[:elite_size]
             elite_genomes = [population[idx] for idx in elite_indices]
             new_population = elite_genomes.copy()
+            
+            # draw_graph(G, layout, genome=best_genome, start=start, finish=finish, iteration=iteration_count, mutation_rate=0.1)
+            # images.append(imageio.imread(f"frame_{iteration_count}.png"))
             
             norm_roulette_weights = calculate_roulette_weights(fitness_values)
             
@@ -93,6 +118,14 @@ def main():
 
     # print("Best path length found: " + str(best_path_length))
     # print("Best genome: " + str(best_genome))
+    
+    # if images:
+    #     imageio.mimwrite('genetic_algorithm.gif', images, fps = 4)
+   # else:
+    #    print("No images to create a GIF.")
+    # remove the images
+    # for i in range(iteration_count):
+        # os.remove(f"frame_{i + 1}.png")
 
 if __name__ == "__main__":
     main()
