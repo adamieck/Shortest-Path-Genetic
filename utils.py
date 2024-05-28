@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 
-def draw_graph(G, pos, genome=None, start=None, finish=None, iteration=None, mutation_rate=None):
+def draw_graph(G, pos, genome=None, start=None, finish=None, iteration=0):
     plt.clf()
-    plt.title(f"Generation {iteration}")
+    # plt.title(f"Generation {iteration}")
     nx.draw(G, pos, with_labels=False, node_color='lightpink', node_size=0, font_weight='bold')
     labels = nx.get_edge_attributes(G, 'weight')
     # nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
@@ -83,7 +83,7 @@ def create_arek_graph():
     to_pick = [0, 1, 2]
     nodenum = 2
 
-    while nodenum < 200:
+    while nodenum < 100:
         nodenum += 1
         
         # Pick a random element from the to_pick list

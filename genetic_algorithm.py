@@ -38,7 +38,6 @@ def calculate_roulette_weights(fitness_values):
     # If all path lengths are 0, we will set them to 1 / fitnessvaluelength
     if np.all(path_lengths_inverted == 0):
         return np.ones(len(fitness_values)) / len(fitness_values)
-    
     min_nonzero = np.min(path_lengths_inverted[path_lengths_inverted != 0])
     roulette_weights = np.where(path_lengths_inverted != 0, np.sqrt(path_lengths_inverted), np.sqrt(min_nonzero / 2))
     norm_roulette_weights = roulette_weights / np.sum(roulette_weights)
